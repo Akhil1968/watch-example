@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+    <link  type="text/css" rel="stylesheet"  href="styles.css" />
+	<script src="https://use.edgefonts.net/lobster-two.js"></script>
+</head>
+<body class="container" ng-app="TheModule">
+<div  >
+	<h3>Watch Example </h3>
+	<br><br>
+
+ 	<div class="well" ng-controller="TheController"> 
+ 		<h5 class="cursive-text-small">Original Value {{myvar}}</h5><br>
+
+ 		<p class="input-group">
+		  <input type="text" ng-model="myvar" 
+		  	class="form-control input-lg"  required >
+		</p>
+		<h6 class="cursive-text-small">Count of changes={{ctr}}</h6><br>
+
+ 		<button ng-click="startSetInterval()" class="btn btn-success">Start using setInterval
+ 		</button>
+ 		<button ng-click="stopClearInterval()" class="btn btn-danger">Stop using clearInterval
+ 		</button>
+ 		&nbsp;&nbsp;&nbsp;
+ 		<button ng-click="startDollarInterval()" class="btn btn-success">Start using $nterval
+ 		</button>
+ 		<button ng-click="stopDollarInterval()" class="btn btn-danger">Stop using $nterval
+ 		</button>
+ 	</div>
+
+
+</div>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+ </script>
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+ </script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js">
+</script> 
+
+<script> 
+	angular.module('TheModule', [])
+	.controller("TheController", ['$scope', '$log', '$interval', 
+		function($scope, $log, $interval) {
+		$scope.myvar = 1;	
+		$scope.ctr = 0;	
+
+		var autoCtr ;
+		//$watch observes changes to myvar and increments ctr
+		$scope.$watch(function(){
+			return $scope.myvar;
+		}, function(nv, ov){
+			if (nv !== ov){
+				$scope.ctr++;
+				$log.log("new Value=%s, old Value=%s", nv, ov);
+			}
+		});
+
+		$scope.startSetInterval = function(){
+		    autoCtr = setInterval(function () {
+		    	// AngularJS unaware of update to $scope hence $apply is required
+		    	$scope.$apply(function () {
+		    		$scope.ctr++;
+		        	$scope.myvar = $scope.ctr++;;
+		        	
+		        });
+		    }, 1000);
+		}//startSetInterval
+
+		$scope.stopClearInterval = function(){
+		    clearInterval(autoCtr);
+		}//stopClearInterval
+
+
+
+		$scope.startDollarInterval = function(){
+		    autoCtr = $interval(function () {
+		    	//$scope.$apply(function () { //this is not required. Because angular is aware of changes 
+		    		$scope.ctr++;
+		        	$scope.myvar = $scope.ctr++;;
+		        	
+		       //});
+		    }, 1000);
+		}//startDollarInterval
+
+		$scope.stopDollarInterval = function(){
+		    $interval.cancel(autoCtr);
+		}//stopDollarInterval
+
+	}])//TheController
+
+
+
+</script>
+</body>
+</html>

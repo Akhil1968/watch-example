@@ -1,0 +1,11 @@
+.cursive-text-large{
+ font-family: lobster-two, cursive;
+ font-size: 40px;
+ color: red;
+}
+
+.cursive-text-small{
+ font-family: lobster-two, cursive;
+ font-size: 20px;
+  color: red;
+}
